@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>David Iradukunda - IT Infrastructure & System Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6C63FF',
+                        secondary: '#F50057',
+                        darkBg: '#121212',
+                        darkCard: '#1E1E1E',
+                        darkText: '#E0E0E0',
+                        lightBg: '#F9F9F9',
+                        lightCard: '#FFFFFF',
+                        lightText: '#333333',
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style id="app-style">
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #6C63FF 0%, #F50057 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: #e0e0e0;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #6C63FF 0%, #F50057 100%);
+            transition: width 1s ease-in-out;
+        }
+        
+        .project-card img {
+            transition: transform 0.5s ease;
+        }
+        
+        .project-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .theme-toggle {
+            cursor: pointer;
+            width: 50px;
+            height: 25px;
+            border-radius: 15px;
+            background-color: #6C63FF;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+        
+        .theme-toggle::after {
+            content: '';
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            border-radius: 50%;
+            background-color: white;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+        
+        .dark .theme-toggle {
+            background-color: #F50057;
+        }
+        
+        .dark .theme-toggle::after {
+            transform: translateX(25px);
+        }
+        
+        .form-field {
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-field:focus {
+            border-color: #6C63FF;
+            outline: none;
+        }
+        
+        /* Animation for skill progress bars */
+        @keyframes fillProgress {
+            from { width: 0; }
+            to { width: var(--progress); }
+        }
+        
+        .animate-progress {
+            animation: fillProgress 1.5s ease-out forwards;
+        }
+        
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .notification.success {
+            background-color: #4caf50;
+        }
+        
+        .notification.error {
+            background-color: #f44336;
+        }
+        
+        /* Mobile menu styles */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 75%;
+            height: 100vh;
+            z-index: 50;
+            transition: right 0.3s ease;
+        }
+        
+        .mobile-menu.open {
+            right: 0;
+        }
+        
+        /* Overlay styles */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="font-sans bg-lightBg text-lightText dark:bg-darkBg dark:text-darkText">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full bg-white/80 dark:bg-darkBg/80 backdrop-blur-md z-30 transition-colors duration-300 shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#hero" class="text-2xl font-bold hero-gradient">David Iradukunda</a>
+            
+            <nav class="hidden md:flex space-x-6">
+                <a href="#about" class="hover:text-primary transition-colors">About</a>
+                <a href="#skills" class="hover:text-primary transition-colors">Skills</a>
+                <a href="#experience" class="hover:text-primary transition-colors">Experience</a>
+                <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
+                <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <div class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"></div>
+                
+                <button id="mobileMenuBtn" class="md:hidden text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div class="overlay" id="overlay"></div>
+    <div class="mobile-menu bg-white dark:bg-darkCard p-6 shadow-lg">
+        <div class="flex justify-end mb-8">
+            <button id="closeMenuBtn" class="text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="flex flex-col space-y-6 text-lg">
+            <a href="#hero" class="hover:text-primary transition-colors">Home</a>
+            <a href="#about" class="hover:text-primary transition-colors">About</a>
+            <a href="#skills" class="hover:text-primary transition-colors">Skills</a>
+            <a href="#experience" class="hover:text-primary transition-colors">Experience</a>
+            <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
+            <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+        </nav>
+    </div>
+    
+    <main class="pt-20">
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-screen flex items-center py-16">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 mb-10 md:mb-0">
+                        <h1 class="text-4xl md:text-6xl font-bold mb-4">Hi, I'm <span class="hero-gradient">David Iradukunda</span></h1>
+                        <h2 class="text-2xl md:text-3xl font-medium text-gray-600 dark:text-gray-400 mb-6">IT Infrastructure & System Administrator</h2>
+                        <p class="text-lg md:text-xl mb-8">Experienced IT professional specializing in designing, implementing, and maintaining robust infrastructure solutions. I ensure systems are secure, reliable, and scalable to meet business needs.</p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="#projects" class="px-8 py-3 bg-primary text-white rounded-full font-medium hover:bg-opacity-90 transition-colors shadow-lg">View My Work</a>
+                            <a href="#contact" class="px-8 py-3 border-2 border-primary text-primary dark:text-white rounded-full font-medium hover:bg-primary hover:bg-opacity-10 transition-colors">Contact Me</a>
+                        </div>
+                        <div class="mt-8 flex space-x-4">
+                            <a href="https://github.com/irad-david" class="text-2xl hover:text-primary transition-colors" aria-label="GitHub">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://ug.linkedin.com/in/iradukunda-david-4a83b0199" class="text-2xl hover:text-primary transition-colors" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="mailto:davieirad@icloud.com" class="text-2xl hover:text-primary transition-colors" aria-label="Email">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 flex justify-center">
+                        <img src="https://cdn.pixabay.com/photo/2021/08/04/13/06/software-developer-6521720_1280.jpg" alt="IT Infrastructure Professional" class="w-full max-w-md rounded-lg shadow-2xl">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- About Section -->
+        <section id="about" class="py-20 bg-gray-100 dark:bg-darkCard">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">About <span class="hero-gradient">Me</span></h2>
+                
+                <div class="flex flex-col md:flex-row items-center gap-10">
+                    <div class="md:w-1/2">
+                        <img src="https://cdn.pixabay.com/photo/2020/05/21/18/58/server-5203045_1280.jpg" alt="Server Infrastructure" class="rounded-lg shadow-lg">
+                    </div>
+                    <div class="md:w-1/2">
+                        <p class="text-lg mb-6">I am a dedicated IT professional with expertise in infrastructure management, system administration, and network security. With a passion for creating efficient and secure IT environments, I specialize in designing and implementing solutions that drive business success.</p>
+                        <p class="text-lg mb-6">My approach combines technical expertise with strategic thinking to ensure that IT infrastructure aligns with organizational goals and delivers maximum value.</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-check text-primary mr-2"></i>
+                                <span>Infrastructure Design</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check text-primary mr-2"></i>
+                                <span>System Administration</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check text-primary mr-2"></i>
+                                <span>Network Security</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check text-primary mr-2"></i>
+                                <span>Cloud Solutions</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Skills Section -->
+        <section id="skills" class="py-20">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">My <span class="hero-gradient">Skills</span></h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="skill-category p-6 bg-white dark:bg-darkBg rounded-xl shadow-lg">
+                        <h3 class="text-xl font-semibold mb-6">System Administration</h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Windows Server</span>
+                                    <span>95%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill animate-progress" style="--progress: 95%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Linux/Unix Administration</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill animate-progress" style="--progress: 90%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Active Directory</span>
+                                    <span>92%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill animate-progress" style="--progress: 92%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Virtualization (VMware/Hyper-V)</span>
+                                    <span>88%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill animate-progress" style="--progress: 88%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-category p-6 bg-white dark:bg-darkBg rounded-xl shadow-lg">
+                        <h3 class="text-xl font-semibold mb-6">Networking & Security</h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Network Infrastructure</span>
+                                    <span>90%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill animate-progress" style="--progress: 90%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Firewall Configuration</span>
+                                    <span>91%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill animate-progress" style="--progress: 87%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Cybersecurity Practices</span>
+                                    <span>88%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill animate-progress" style="--progress: 85%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span>Disaster Recovery</span>
+                                    <span>88%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill animate-progress" style="--progress: 88%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-category p-6 bg-white dark:bg-darkBg rounded-xl shadow-lg">
+                        <h3 class="text-xl font-semibold mb-6">Cloud Technologies</h3>
+                        
+                        <div class="flex flex-wrap">
+                            <div class="badge bg-primary text-white">AWS</div>
+                            <div class="badge bg-primary text-white">Azure</div>
+                            <div class="badge bg-primary text-white">Google Cloud</div>
+                            <div class="badge bg-primary text-white">Docker</div>
+                            <div class="badge bg-primary text-white">Kubernetes</div>
+                            <div class="badge bg-primary text-white">Serverless</div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-category p-6 bg-white dark:bg-darkBg rounded-xl shadow-lg">
+                        <h3 class="text-xl font-semibold mb-6">Scripting & Automation</h3>
+                        
+                        <div class="flex flex-wrap">
+                            <div class="badge bg-secondary text-white">PowerShell</div>
+                            <div class="badge bg-secondary text-white">Bash Scripting</div>
+                            <div class="badge bg-secondary text-white">Python</div>
+                            <div class="badge bg-secondary text-white">API Integration</div>
+                            <div class="badge bg-secondary text-white">Monitoring Tools</div>
+                            <div class="badge bg-secondary text-white">Database Management</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Experience Section -->
+        <section id="experience" class="py-20 bg-gray-100 dark:bg-darkCard">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">Work <span class="hero-gradient">Experience</span></h2>
+                
+                <div class="max-w-3xl mx-auto space-y-12">
+                    <div class="bg-white dark:bg-darkBg p-6 rounded-xl shadow-lg">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold">IT Assistant</h3>
+                                <p class="text-primary">UBOS</p>
+                            </div>
+                            <span class="bg-primary text-white py-1 px-3 rounded-full text-sm">2024 - Present</span>
+                        </div>
+                        <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                            <li>Managed and maintained enterprise IT infrastructure serving 500+ users</li>
+                            <li>Implemented virtualization solutions that reduced hardware costs by 40%</li>
+                            <li>Designed and deployed comprehensive backup and disaster recovery solutions</li>
+                            <li>Led migration of on-premise infrastructure to hybrid cloud environment</li>
+                            <li>Implemented security protocols that reduced vulnerabilities by 75%</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-darkBg p-6 rounded-xl shadow-lg">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold">JUNIOR SYSTEM ADMINISTRATOR</h3>
+                                <p class="text-primary">LOLC UNGUKA FINANCE </p>
+                            </div>
+                            <span class="bg-primary text-white py-1 px-3 rounded-full text-sm">2022 - 2024</span>
+                        </div>
+                        <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                            <li>Administered Windows and Linux server environments</li>
+                            <li>Automated routine tasks through PowerShell and Bash scripting</li>
+                            <li>Installed the new Fortinet infrastructure and managed it</li>
+                            <li>Managed network infrastructure including switches, routers, and firewalls</li>
+                            <li>Implemented monitoring solutions that improved system uptime to 99.9%</li>
+                            <li>Provided technical leadership for infrastructure projects</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-darkBg p-6 rounded-xl shadow-lg">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold">Junior System Administrator</h3>
+                                <p class="text-primary">GOLDEN PLATE RESTAURANT</p>
+                            </div>
+                            <span class="bg-primary text-white py-1 px-3 rounded-full text-sm">2021 - 2022</span>
+                        </div>
+                        <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                            <li>Provided technical support for end-users and resolved IT issues</li>
+                            <li>Assisted in maintaining server infrastructure and network systems</li>
+                            <li>Participated in IT infrastructure planning and implementation</li>
+                            <li>Documented system configurations and procedures</li>
+                            <li>Assisted in security audits and vulnerability assessments</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Projects Section -->
+        <section id="projects" class="py-20">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">Infrastructure <span class="hero-gradient">Projects</span></h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project 1 -->
+                    <div class="project-card bg-white dark:bg-darkCard rounded-xl shadow-lg overflow-hidden">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://cdn.pixabay.com/photo/2017/07/11/00/24/server-2493034_1280.jpg" alt="Cloud Migration Project" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Hybrid Cloud Infrastructure</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Designed and implemented a hybrid cloud solution integrating on-premise infrastructure with AWS and Azure services.</p>
+                            <div class="mb-4 flex flex-wrap">
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">AWS</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Azure</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">VMware</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Terraform</span>
+                            </div>
+                            <div class="flex space-x-4">
+                                <a href="javascript:void(0)" class="text-primary hover:underline flex items-center">
+                                    <i class="fas fa-link-simple mr-1"></i> Case Study
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 2 -->
+                    <div class="project-card bg-white dark:bg-darkCard rounded-xl shadow-lg overflow-hidden">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://cdn.pixabay.com/photo/2016/11/29/12/13/fence-1869400_1280.jpg" alt="Security Infrastructure" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Enterprise Security Implementation</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Designed and deployed a comprehensive security infrastructure including firewalls, IDS/IPS, and endpoint protection.</p>
+                            <div class="mb-4 flex flex-wrap">
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Firewalls</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">SIEM</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Endpoint Protection</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">IDP</span>
+                            </div>
+                            <div class="flex space-x-4">
+                                <a href="javascript:void(0)" class="text-primary hover:underline flex items-center">
+                                    <i class="fas fa-link-simple mr-1"></i> Case Study
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 3 -->
+                    <div class="project-card bg-white dark:bg-darkCard rounded-xl shadow-lg overflow-hidden">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://cdn.pixabay.com/photo/2018/05/08/19/53/backup-3384300_1280.jpg" alt="Disaster Recovery Solution" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Disaster Recovery Solution</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Implemented a comprehensive disaster recovery solution with automated failover, reducing RTO from 48 hours to 15 minutes.</p>
+                            <div class="mb-4 flex flex-wrap">
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Veeam</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Zerto</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">AWS S3</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Azure Site Recovery</span>
+                            </div>
+                            <div class="flex space-x-4">
+                                <a href="javascript:void(0)" class="text-primary hover:underline flex items-center">
+                                    <i class="fas fa-link-simple mr-1"></i> Case Study
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 4 -->
+                    <div class="project-card bg-white dark:bg-darkCard rounded-xl shadow-lg overflow-hidden">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://cdn.pixabay.com/photo/2017/05/29/18/22/technology-2354310_1280.jpg" alt="Network Infrastructure" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Network Infrastructure Overhaul</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Redesigned and implemented a complete network infrastructure upgrade of FortNet improving performance by 60% and security posture.</p>
+                            <div class="mb-4 flex flex-wrap">
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">FortiGate</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Sophos</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">VLAN</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">SD-WAN</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">QoS</span>
+                            </div>
+                            <div class="flex space-x-4">
+                                <a href="javascript:void(0)" class="text-primary hover:underline flex items-center">
+                                    <i class="fas fa-link-simple mr-1"></i> Case Study
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 5 -->
+                    <div class="project-card bg-white dark:bg-darkCard rounded-xl shadow-lg overflow-hidden">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://cdn.pixabay.com/photo/2020/01/27/18/35/network-4797852_1280.jpg" alt="Automation System" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Infrastructure Automation</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Developed automation scripts and workflows for infrastructure provisioning, configuration, and monitoring.</p>
+                            <div class="mb-4 flex flex-wrap">
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Ansible</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">PowerShell</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Python</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">API Integration</span>
+                            </div>
+                            <div class="flex space-x-4">
+                                <a href="javascript:void(0)" class="text-primary hover:underline flex items-center">
+                                    <i class="fas fa-link-simple mr-1"></i> Case Study
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 6 -->
+                    <div class="project-card bg-white dark:bg-darkCard rounded-xl shadow-lg overflow-hidden">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://cdn.pixabay.com/photo/2020/06/13/19/02/cloud-5295431_1280.jpg" alt="Monitoring System" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Enterprise Monitoring System</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Implemented a comprehensive monitoring solution providing real-time insights into infrastructure performance and health.</p>
+                            <div class="mb-4 flex flex-wrap">
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Zabbix</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Prometheus</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Grafana</span>
+                                <span class="badge bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">ELK Stack</span>
+                            </div>
+                            <div class="flex space-x-4">
+                                <a href="javascript:void(0)" class="text-primary hover:underline flex items-center">
+                                    <i class="fas fa-link-simple mr-1"></i> Case Study
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 bg-gray-100 dark:bg-darkCard">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">Get In <span class="hero-gradient">Touch</span></h2>
+                
+                <div class="flex flex-col lg:flex-row gap-12">
+                    <div class="lg:w-1/2 space-y-8">
+                        <p class="text-lg">I'm always interested in new challenges and opportunities. If you have a project or position that could benefit from my expertise, feel free to reach out.</p>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="mt-1 text-xl text-primary">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">Phone</h3>
+                                <p>+256704624904</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="mt-1 text-xl text-primary">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">Email</h3>
+                                <p>davieirad@icloud.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="mt-1 text-xl text-primary">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">Location</h3>
+                                <p>Kampala, Uganda</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-6 pt-4">
+                            <a href="https://github.com/irad-david" class="text-2xl hover:text-primary transition-colors">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://ug.linkedin.com/in/iradukunda-david-4a83b0199" class="text-2xl hover:text-primary transition-colors">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="mailto:davieirad@icloud.com" class="text-2xl hover:text-primary transition-colors">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:w-1/2">
+                        <form id="contactForm" class="bg-white dark:bg-darkBg p-8 rounded-xl shadow-lg">
+                            <div class="mb-6">
+                                <label for="name" class="block mb-2 font-medium">Name</label>
+                                <input type="text" id="name" class="form-field w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-transparent dark:bg-gray-800" required>
+                                <p class="text-red-500 text-sm mt-1 hidden" id="nameError">Name is required</p>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="email" class="block mb-2 font-medium">Email</label>
+                                <input type="email" id="email" class="form-field w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-transparent dark:bg-gray-800" required>
+                                <p class="text-red-500 text-sm mt-1 hidden" id="emailError">Please enter a valid email</p>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="message" class="block mb-2 font-medium">Message</label>
+                                <textarea id="message" rows="5" class="form-field w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg resize-none bg-transparent dark:bg-gray-800" required></textarea>
+                                <p class="text-red-500 text-sm mt-1 hidden" id="messageError">Message is required</p>
+                            </div>
+                            
+                            <button type="submit" class="w-full py-3 bg-primary text-white rounded-lg font-medium hover:bg-opacity-90 transition-colors shadow-lg flex justify-center items-center">
+                                <span>Send Message</span>
+                                <i class="fas fa-paper-plane ml-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-darkBg py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="mb-4 md:mb-0">© 2025 David Iradukunda. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#hero" class="hover:text-primary transition-colors">Home</a>
+                    <a href="#about" class="hover:text-primary transition-colors">About</a>
+                    <a href="#skills" class="hover:text-primary transition-colors">Skills</a>
+                    <a href="#experience" class="hover:text-primary transition-colors">Experience</a>
+                    <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
+                    <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notificationMessage"></span>
+    </div>
+    
+    <script id="app-script">
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+        
+        // Check if user has already set a preference
+        if (localStorage.getItem('theme') === 'dark' || 
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            
+            // Save preference to localStorage
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const overlay = document.getElementById('overlay');
+        const mobileLinks = document.querySelectorAll('.mobile-menu a');
+        
+        function openMenu() {
+            mobileMenu.classList.add('open');
+            overlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMenu() {
+            mobileMenu.classList.remove('open');
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        
+        mobileMenuBtn.addEventListener('click', openMenu);
+        closeMenuBtn.addEventListener('click', closeMenu);
+        overlay.addEventListener('click', closeMenu);
+        
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+        
+        // Contact form validation and submission
+        const contactForm = document.getElementById('contactForm');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const messageInput = document.getElementById('message');
+        const nameError = document.getElementById('nameError');
+        const emailError = document.getElementById('emailError');
+        const messageError = document.getElementById('messageError');
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notificationMessage');
+        
+        function validateEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+        
+        function showNotification(message, type) {
+            notificationMessage.textContent = message;
+            notification.classList.add('show', type);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.classList.remove(type);
+                }, 300);
+            }, 3000);
+        }
+        
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let isValid = true;
+            
+            // Reset errors
+            nameError.classList.add('hidden');
+            emailError.classList.add('hidden');
+            messageError.classList.add('hidden');
+            
+            // Validate name
+            if (nameInput.value.trim() === '') {
+                nameError.classList.remove('hidden');
+                isValid = false;
+            }
+            
+            // Validate email
+            if (!validateEmail(emailInput.value.trim())) {
+                emailError.classList.remove('hidden');
+                isValid = false;
+            }
+            
+            // Validate message
+            if (messageInput.value.trim() === '') {
+                messageError.classList.remove('hidden');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Store message in localStorage
+                const messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+                messages.push({
+                    name: nameInput.value.trim(),
+                    email: emailInput.value.trim(),
+                    message: messageInput.value.trim(),
+                    date: new Date().toISOString()
+                });
+                localStorage.setItem('contactMessages', JSON.stringify(messages));
+                
+                // Reset form
+                contactForm.reset();
+                
+                // Show success notification
+                showNotification('Message sent successfully!', 'success');
+            }
+        });
+        
+        // Skill animation - only animate when scrolled into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const progressBars = entry.target.querySelectorAll('.progress-bar-fill');
+                    progressBars.forEach(bar => {
+                        const width = bar.style.getPropertyValue('--progress');
+                        bar.style.width = width;
+                    });
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.skill-category').forEach(category => {
+            observer.observe(category);
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80, // Offset for fixed header
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
