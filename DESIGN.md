@@ -14,6 +14,8 @@ The site is built on one idea: **David's work, shown as the infrastructure he pa
 | `--rack` | `#15181C` | patch panel, contact section |
 | `--yellow` | `#F2C230` | selection, readout port, focus ring on dark |
 
+**Dark mode** follows the visitor's system setting (`prefers-color-scheme: dark`). The same tokens are redefined inside the media query: paper becomes `#101316`, ink becomes `#E7EAEC`, the rack drops to `#0A0C0E` with a 1px edge so it still reads as an object, and diagram nodes use `--node`. Label tape stays light in both themes (`--tape`, `--tape-ink`), because it's a physical label. Never hard-code a colour outside the rack; add a token instead.
+
 **Cable colour code.** Each `data-c` value sets `--cord` (and `--cord-strong` for thin lines on white). Use the same colour for a topic everywhere: ports, stack layers, tags, tabs and diagrams.
 
 | `data-c` | Meaning |
