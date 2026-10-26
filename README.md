@@ -10,7 +10,7 @@ Both deploy automatically from the `main` branch: Cloudflare Pages pulls the rep
 ## What's on the page
 
 | Section | What it shows |
-|---|---|
+| --- | --- |
 | Hero | Name, summary, CV download, and a 20-port patch panel. Each port is a tool, and hovering, focusing or tapping it shows where it was used. |
 | Stack | Six infrastructure layers (people → network) that spread apart as you scroll. The active layer follows the text. |
 | Experience | UBOS and LOLC Unguka Bank, with a cable run that draws as you read. |
@@ -38,6 +38,6 @@ Use relative paths such as `images/...`, never `/images/...`. GitHub Pages serve
 
 ## Tech
 
-Plain HTML, CSS and vanilla JavaScript. [Archivo](https://fonts.google.com/specimen/Archivo) and [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) come from Google Fonts, icons are inline [Lucide](https://lucide.dev) SVGs, and animation uses [Motion](https://motion.dev) for the entrance sequence, scroll-linked effects and in-view reveals. Everything respects `prefers-reduced-motion`.
+Plain HTML, CSS and vanilla JavaScript. [Archivo](https://fonts.google.com/specimen/Archivo) and [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) come from Google Fonts, icons are inline [Lucide](https://lucide.dev) SVGs, and animation uses [Motion](https://motion.dev) for the entrance sequence, scroll-linked effects and in-view reveals. Everything respects `prefers-reduced-motion`, and the colours follow the visitor's light or dark system setting.
 
 © 2026 David Iradukunda

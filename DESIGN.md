@@ -5,7 +5,7 @@ The site is built on one idea: **David's work, shown as the infrastructure he pa
 ## Colour
 
 | Token | Value | Role |
-|---|---|---|
+| --- | --- | --- |
 | `--paper` | `#F2F3EF` | page ground |
 | `--paper-2` | `#E6E8E3` | banded sections (Selected work) |
 | `--sheet` | `#FBFBF9` | cards, label tape, diagram stage |
@@ -19,7 +19,7 @@ The site is built on one idea: **David's work, shown as the infrastructure he pa
 **Cable colour code.** Each `data-c` value sets `--cord` (and `--cord-strong` for thin lines on white). Use the same colour for a topic everywhere: ports, stack layers, tags, tabs and diagrams.
 
 | `data-c` | Meaning |
-|---|---|
+| --- | --- |
 | `blue` | Network & security |
 | `green` | Servers & virtualisation |
 | `orange` | Identity & access |
